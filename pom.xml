@@ -58,7 +58,7 @@
     <repository>
       <id>artifactory1-releases</id>
       <name>artifactory1.eng.lancope.local-releases</name>
-      <url>http://artifactory1.eng.lancope.local/ext-release-local</url>
+      <url>http://artifactory1.eng.lancope.local/jenkins-release-local</url>
     </repository>
   </repositories>
 </project>
