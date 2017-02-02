@@ -17,6 +17,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.eclipse.jetty.websocket</groupId>
+      <artifactId>websocket-client</artifactId>
+      <version>9.3.15.v20161220</version>
+    </dependency>
+    <dependency>
       <groupId>javax.websocket</groupId>
       <artifactId>javax.websocket-client-api</artifactId>
       <version>1.0</version>
