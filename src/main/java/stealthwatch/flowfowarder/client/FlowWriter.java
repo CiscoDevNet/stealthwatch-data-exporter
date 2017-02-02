@@ -8,30 +8,34 @@ import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import org.apache.log4j.Logger;
 
 import static javax.websocket.ContainerProvider.getWebSocketContainer;
+import static org.apache.log4j.Logger.getLogger;
 
 /**
  * https://dzone.com/articles/sample-java-web-socket-client
  */
-@SuppressWarnings("UseOfSystemOutOrSystemErr")
 @ClientEndpoint
 public class FlowWriter {
+
+    private static final Logger log = getLogger(FlowWriter.class);
+
     private static final Object waitLock = new Object();
 
     @OnMessage
     public void onMessage(ByteBuffer message) {
-        System.out.println("Received msg: " + message);
+        log.info("Received msg: " + message);
     }
 
     @OnOpen
     public void onOpen(Session session) {
-        System.out.println("onOpen " + session);
+        log.info("onOpen " + session);
     }
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        System.out.println("onClose " + session + ' ' + reason);
+        log.info("onClose " + session + ' ' + reason);
     }
 
     private static void waitForTerminateSignal() {
