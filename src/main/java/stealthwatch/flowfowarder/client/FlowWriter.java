@@ -13,8 +13,11 @@ import javax.websocket.Session;
 
 import static javax.websocket.ContainerProvider.getWebSocketContainer;
 
+@SuppressWarnings("UseOfSystemOutOrSystemErr")
+
 @ClientEndpoint
 class FlowWriter {
+    private static Object waitLock = new Object();
 
     static void start(String host) throws URISyntaxException, IOException, DeploymentException {
         try (Session ignored = getWebSocketContainer().connectToServer(new FlowWriter(),
@@ -23,6 +26,8 @@ class FlowWriter {
         }
     }
 
+
+
     @OnOpen
     public void onOpen(Session session) {
         System.out.println("onOpen " + session);
@@ -30,11 +35,19 @@ class FlowWriter {
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        System.out.println("onClose " + session + " " + reason);
+        System.out.println("onClose " + session + ' ' + reason);
     }
 
     @OnMessage
     public void onMessage(String message) {
         System.out.println("onMessage " + message);
+    }
+
+    public static void main(String... args) {
+        try {
+            FlowWriter.start("10.0.37.30");
+        } catch (Exception e) {
+            System.err.println("URISyntaxException exception: " + e.getMessage());
+        }
     }
 }
