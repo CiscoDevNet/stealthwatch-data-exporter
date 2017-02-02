@@ -1,5 +1,9 @@
 package stealthwatch.flowfowarder.client;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.lancope.sw.ExternalFlowProtos;
+import com.lancope.sw.ExternalFlowProtos.ExtFlow;
+import com.lancope.sw.ExternalFlowProtos.ExtFlows;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import javax.websocket.ClientEndpoint;
@@ -25,7 +29,18 @@ public class FlowWriter {
 
     @OnMessage
     public void onMessage(ByteBuffer message) {
-        log.info("Received msg: " + message);
+        try {
+            ExtFlows extFlows = ExtFlows.parseFrom(message.array());
+            for (int i = 0; i < extFlows.getFlowCount(); ++i) {
+                log(extFlows.getFlow(i));
+            }
+        } catch (InvalidProtocolBufferException e) {
+            log.error("Unable to parse message.", e);
+        }
+    }
+
+    private static void log(ExtFlow extFlow) {
+        log.info(extFlow);
     }
 
     @OnOpen
