@@ -1,11 +1,9 @@
 package stealthwatch.flowfowarder.client;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
-import javax.websocket.DeploymentException;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
@@ -13,20 +11,18 @@ import javax.websocket.Session;
 
 import static javax.websocket.ContainerProvider.getWebSocketContainer;
 
+/**
+ * https://dzone.com/articles/sample-java-web-socket-client
+ */
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
-
 @ClientEndpoint
-class FlowWriter {
-    private static Object waitLock = new Object();
+public class FlowWriter {
+    private static final Object waitLock = new Object();
 
-    static void start(String host) throws URISyntaxException, IOException, DeploymentException {
-        try (Session ignored = getWebSocketContainer().connectToServer(new FlowWriter(),
-                                                                       new URI("ws://" + host + ":8092/websocket"))) {
-            ; // Intentionally empty
-        }
+    @OnMessage
+    public void onMessage(ByteBuffer message) {
+        System.out.println("Received msg: " + message);
     }
-
-
 
     @OnOpen
     public void onOpen(Session session) {
@@ -38,16 +34,25 @@ class FlowWriter {
         System.out.println("onClose " + session + ' ' + reason);
     }
 
-    @OnMessage
-    public void onMessage(String message) {
-        System.out.println("onMessage " + message);
+    private static void waitForTerminateSignal() {
+        synchronized (waitLock) {
+            try {
+                waitLock.wait();
+            } catch (InterruptedException ignored) {
+            }
+        }
     }
 
-    public static void main(String... args) {
+    public static void main(String... args) throws Exception {
+        Session session = null;
         try {
-            FlowWriter.start("10.0.37.30");
-        } catch (Exception e) {
-            System.err.println("URISyntaxException exception: " + e.getMessage());
+            session = getWebSocketContainer().connectToServer(FlowWriter.class,
+                                                              URI.create("ws://10.0.37.30:8092/websocket"));
+            waitForTerminateSignal();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 }
