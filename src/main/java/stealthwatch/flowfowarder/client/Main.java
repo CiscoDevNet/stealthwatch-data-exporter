@@ -17,12 +17,17 @@ public class Main {
         }
     }
 
-    public static void main(String... ips) throws Exception {
-        FlowForwarderClient flowForwarder = new FlowForwarderClient();
-        for(String ip : ips){
-            flowForwarder.forwardFlows(ip, HTTP);
+    public static void main(String... hosts) throws Exception {
+        if(hosts.length > 0){
+            FlowForwarderClient flowForwarder = new FlowForwarderClient();
+            for(String ip : hosts){
+                flowForwarder.forwardFlows(ip, HTTP);
+            }
+            waitForTerminateSignal(flowForwarder);
+        }else {
+            System.out.println("NO ARGS");
         }
-        waitForTerminateSignal(flowForwarder);
+
     }
 
 }
