@@ -35,7 +35,7 @@ public class Main {
         List<FlowCollector> flowCollectors = new ArrayList<>();
 
         for (String host : hosts) {
-            FlowCollector flowCollector = new FlowCollector(host, HTTP);
+            final FlowCollector flowCollector = new FlowCollector(host, HTTP);
             flowCollectors.add(flowCollector);
             new Thread(new Runnable() {
                 @Override
