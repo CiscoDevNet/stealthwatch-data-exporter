@@ -6,8 +6,6 @@ import java.net.UnknownHostException;
 
 import org.junit.Test;
 
-import stealthwatch.flowfowarder.client.FieldFormatter;
-
 /**
  * The Unit Test for FieldFormatter.
  */

@@ -1,4 +1,4 @@
-package stealthwatch.flowfowarder.client;
+package stealthwatch.flowforwarder.client;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,8 +10,6 @@ import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.GeneratedMessage;
 import com.lancope.sw.AddressProtos.IPAddress;
 import com.lancope.sw.AddressProtos.MacAddress;
-
-import stealthwatch.flowfowarder.client.FieldFormatter.FieldFormatterType;
 
 /**
  * The Message Formatter.
@@ -31,10 +29,10 @@ public class MessageFormatter {
 	private String prefix;
 
 	/** The field formatters filtered by name. */
-	private Map<String, FieldFormatterType> nameFieldFormatters = new HashMap<String, FieldFormatterType>();
+	private Map<String, FieldFormatter.FieldFormatterType> nameFieldFormatters = new HashMap<String, FieldFormatter.FieldFormatterType>();
 
 	/** The field formatters filtered by type. */
-	private Map<String, FieldFormatterType> typeFieldFormatters = new HashMap<String, FieldFormatterType>();
+	private Map<String, FieldFormatter.FieldFormatterType> typeFieldFormatters = new HashMap<String, FieldFormatter.FieldFormatterType>();
 
 	/** The suffix. */
 	private String suffix;
@@ -103,8 +101,8 @@ public class MessageFormatter {
 	 *            the suffix
 	 */
 	private <M extends GeneratedMessage> MessageFormatter(M message, String separator, String prefix,
-			Map<String, FieldFormatterType> nameFieldFormatters, Map<String, FieldFormatterType> typeFieldFormatters,
-			String suffix) {
+                                                          Map<String, FieldFormatter.FieldFormatterType> nameFieldFormatters, Map<String, FieldFormatter.FieldFormatterType> typeFieldFormatters,
+                                                          String suffix) {
 		super();
 		this.message = message;
 		setSeparator(separator);
@@ -144,7 +142,7 @@ public class MessageFormatter {
 	 * @param formatterType
 	 *            the formatter type
 	 */
-	public void addNameFormatter(String name, FieldFormatterType formatterType) {
+	public void addNameFormatter(String name, FieldFormatter.FieldFormatterType formatterType) {
 		nameFieldFormatters.put(name, formatterType);
 	}
 
@@ -156,7 +154,7 @@ public class MessageFormatter {
 	 * @param formatterType
 	 *            the formatter type
 	 */
-	public void addTypeFormatter(String type, FieldFormatterType formatterType) {
+	public void addTypeFormatter(String type, FieldFormatter.FieldFormatterType formatterType) {
 		typeFieldFormatters.put(type, formatterType);
 	}
 
@@ -198,7 +196,7 @@ public class MessageFormatter {
 	 */
 	private void formatSimpleField(StringBuffer result, Object valueObj, String name) {
 		String value = null;
-		FieldFormatterType type = nameFieldFormatters.get(name);
+		FieldFormatter.FieldFormatterType type = nameFieldFormatters.get(name);
 		if (type != null) {
 			value = formatByType(type, valueObj);
 		} else {
@@ -223,7 +221,7 @@ public class MessageFormatter {
 	 */
 	private void formatNestedMessage(StringBuffer result, FieldDescriptor field, FieldDescriptorProto desc,
 			Object valueObj, String name) {
-		FieldFormatterType type = typeFieldFormatters.get(desc.getTypeName());
+		FieldFormatter.FieldFormatterType type = typeFieldFormatters.get(desc.getTypeName());
 		if (type != null) {
 			result.append(name).append(EQUALS).append(formatByType(type, valueObj));
 		} else {
@@ -269,7 +267,7 @@ public class MessageFormatter {
 	 *            the val
 	 * @return the string
 	 */
-	private String formatByType(FieldFormatterType type, Object val) {
+	private String formatByType(FieldFormatter.FieldFormatterType type, Object val) {
 		String result = null;
 		switch (type) {
 		case IP:

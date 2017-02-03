@@ -1,4 +1,4 @@
-package stealthwatch.flowfowarder.client;
+package stealthwatch.flowforwarder.client;
 
 import javax.websocket.DeploymentException;
 import javax.websocket.Session;

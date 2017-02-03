@@ -1,7 +1,4 @@
-package stealthwatch.flowfowarder.applance;
-
-import stealthwatch.flowfowarder.client.FlowCollectorSession;
-import stealthwatch.flowfowarder.client.SocketProtocol;
+package stealthwatch.flowforwarder.client;
 
 public class FlowCollector {
     private final String ipAddress;

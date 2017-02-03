@@ -1,4 +1,4 @@
-package stealthwatch.flowfowarder.client;
+package stealthwatch.flowforwarder.client;
 
 import org.apache.log4j.Logger;
 

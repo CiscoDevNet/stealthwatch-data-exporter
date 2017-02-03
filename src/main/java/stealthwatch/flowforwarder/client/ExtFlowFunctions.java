@@ -1,11 +1,11 @@
-package stealthwatch.flowfowarder.client;
+package stealthwatch.flowforwarder.client;
 
 import com.lancope.sw.ExternalFlowProtos.ExtFlow;
 
-import stealthwatch.flowfowarder.client.FieldFormatter.FieldFormatterType;
+import stealthwatch.flowforwarder.client.FieldFormatter.FieldFormatterType;
 
 public class ExtFlowFunctions {
-	
+
     public static String fromFlowExtToString(ExtFlow extFlow) {
     	MessageFormatter formatter = new MessageFormatter(extFlow);
     	formatter.addNameFormatter("start_active_usec", FieldFormatterType.DATE);

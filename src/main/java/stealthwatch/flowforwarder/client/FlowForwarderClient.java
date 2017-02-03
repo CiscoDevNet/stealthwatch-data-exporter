@@ -1,11 +1,9 @@
-package stealthwatch.flowfowarder.client;
-
-import stealthwatch.flowfowarder.applance.FlowCollector;
+package stealthwatch.flowforwarder.client;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static stealthwatch.flowfowarder.client.SocketProtocol.HTTP;
+import static stealthwatch.flowforwarder.client.SocketProtocol.HTTP;
 
 public class FlowForwarderClient {
 

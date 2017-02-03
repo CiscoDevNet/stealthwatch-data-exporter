@@ -1,4 +1,4 @@
-package stealthwatch.flowfowarder.client;
+package stealthwatch.flowforwarder.client;
 
 public enum SocketProtocol {
     HTTPS(443), HTTP(8092);

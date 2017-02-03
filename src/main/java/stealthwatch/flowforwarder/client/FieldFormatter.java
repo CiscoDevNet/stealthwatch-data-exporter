@@ -1,4 +1,4 @@
-package stealthwatch.flowfowarder.client;
+package stealthwatch.flowforwarder.client;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -16,23 +16,23 @@ public class FieldFormatter {
 	 * The Enum FieldFormatterType.
 	 */
 	public enum FieldFormatterType {
-		
+
 		/** IP address. */
 		IP,
-		
+
 		/** Mac address. */
 		MAC,
-		
+
 		/** Date. */
 		DATE;
 	}
 
 	/** The Constant for DOT. */
 	private static final String DOT = ".";
-	
+
 	/** The Constant for COLON. */
 	private static final String COLON = ":";
-	
+
 	/**
 	 * Format IP address.
 	 *

@@ -21,7 +21,7 @@ Setup Instructions
    
     $ mvn package
     $ cd target
-    $ java -cp flow-fowarder-client-0.1.0-jar-with-dependencies.jar stealwatch.flowfowarder.client.Main flow-collector-ip...
+    $ java -cp flow-forwarder-client-0.1.0-jar-with-dependencies.jar stealwatch.flowforwarder.client.Main flow-collector-ip...
 
 The `log` directory will contain two log files:  
 

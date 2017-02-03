@@ -1,4 +1,4 @@
-package stealthwatch.flowfowarder.client;
+package stealthwatch.flowforwarder.client;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.lancope.sw.ExternalFlowProtos.ExtFlow;
@@ -13,8 +13,6 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
-import static stealthwatch.flowfowarder.client.ExtFlowFunctions.fromFlowExtToString;
-
 @ClientEndpoint
 public class MessageHandler {
 
@@ -23,7 +21,7 @@ public class MessageHandler {
     public void onMessage(ByteBuffer message) {
         try {
             for (ExtFlow extFlow : ExtFlows.parseFrom(message.array()).getFlowList()) {
-                Loggers.message.info(">>> " + fromFlowExtToString(extFlow));
+                Loggers.message.info(">>> " + ExtFlowFunctions.fromFlowExtToString(extFlow));
             }
         } catch (InvalidProtocolBufferException e) {
             Loggers.system.info("Unable to parse message.", e);
