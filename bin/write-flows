@@ -3,4 +3,6 @@
 project_home="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 cd ${project_home}
 
+rm -rf log/*
+
 java -cp target/flow-forwarder-client-0.1.0-jar-with-dependencies.jar stealthwatch.flowforwarder.client.Main "$@"
