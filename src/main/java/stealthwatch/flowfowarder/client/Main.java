@@ -18,6 +18,7 @@ public class Main {
     }
 
     public static void main(String... hosts) throws Exception {
+        System.out.println("STARTING");
         if(hosts.length > 0){
             FlowForwarderClient flowForwarder = new FlowForwarderClient();
             for(String ip : hosts){
