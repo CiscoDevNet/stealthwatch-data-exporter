@@ -21,22 +21,12 @@ public class FlowCollector {
         startSession();
     }
 
-    public void startSession() throws Exception{
+    private void startSession() throws Exception{
         this.session = getWebSocketContainer().connectToServer(MessageHandler.class,
                 URI.create("ws://" + ipAddress + ":" + port + "/websocket"));
     }
 
     public void closeSession() throws Exception{
         session.close();
-    }
-
-    public String getIpAddress(){
-        return this.ipAddress;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        return obj != null && obj instanceof FlowCollector && this.ipAddress.equals(((FlowCollector) obj).ipAddress);
     }
 }

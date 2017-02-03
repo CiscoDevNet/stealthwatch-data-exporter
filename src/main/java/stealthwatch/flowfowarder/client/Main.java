@@ -17,11 +17,11 @@ public class Main {
         }
     }
 
-    public static void main(String... args) throws Exception {
-        String ip = "10.0.37.30";
+    public static void main(String... ips) throws Exception {
         FlowForwarderClient flowForwarder = new FlowForwarderClient();
-        //flowForwarder.forwardFlows("10.0.37.208", HTTP);
-        flowForwarder.forwardFlows(ip, HTTP);
+        for(String ip : ips){
+            flowForwarder.forwardFlows(ip, HTTP);
+        }
         waitForTerminateSignal(flowForwarder);
     }
 
