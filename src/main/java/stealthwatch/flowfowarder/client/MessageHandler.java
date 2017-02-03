@@ -5,6 +5,7 @@ import com.lancope.sw.ExternalFlowProtos.ExtFlow;
 import com.lancope.sw.ExternalFlowProtos.ExtFlows;
 
 import java.nio.ByteBuffer;
+import java.util.Date;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
@@ -31,11 +32,11 @@ public class MessageHandler {
 
     @OnOpen
     public void onOpen(Session session) {
-        Loggers.system.info("onOpen " + session);
+        Loggers.system.info("Socket Opened at  " + new Date().toString() + " " + session);
     }
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        Loggers.system.info("onClose " + session + ' ' + reason);
+        Loggers.system.info("Socket Closed  at  " + new Date().toString() + " " + session);
     }
 }

@@ -1,7 +1,5 @@
 package stealthwatch.flowfowarder.client;
 
-import stealthwatch.flowfowarder.applance.FlowCollector;
-
 import javax.websocket.DeploymentException;
 import javax.websocket.Session;
 
