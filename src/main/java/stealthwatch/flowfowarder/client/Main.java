@@ -40,11 +40,7 @@ public class Main {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
                         flowCollector.startSession();
-                    } catch (Exception e) {
-                        Loggers.system.error("Unable to start flow collector", e);
-                    }
                 }
             }).start();
         }
