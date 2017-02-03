@@ -22,7 +22,7 @@ public class MessageHandler {
     public void onMessage(ByteBuffer message) {
         try {
             for (ExtFlow extFlow : ExtFlows.parseFrom(message.array()).getFlowList()) {
-                Loggers.message.info(fromFlowExtToString(extFlow));
+                Loggers.message.info(">>> " + fromFlowExtToString(extFlow));
             }
         } catch (InvalidProtocolBufferException e) {
             Loggers.system.info("Unable to parse message.", e);

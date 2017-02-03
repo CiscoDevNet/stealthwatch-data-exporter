@@ -1,5 +1,6 @@
 package stealthwatch.flowfowarder.applance;
 
+import stealthwatch.flowfowarder.client.FlowCollectorSession;
 import stealthwatch.flowfowarder.client.Loggers;
 import stealthwatch.flowfowarder.client.MessageHandler;
 import stealthwatch.flowfowarder.client.SocketProtocol;
@@ -16,7 +17,7 @@ import static javax.websocket.ContainerProvider.getWebSocketContainer;
 public class FlowCollector {
     private final String ipAddress;
     private final int port;
-    private Session session;
+    private FlowCollectorSession session;
 
     public FlowCollector(String ipAddress, SocketProtocol protocol) {
         this.ipAddress = ipAddress;
@@ -24,19 +25,11 @@ public class FlowCollector {
     }
 
     public void startSession() {
-        try {
-            this.session = getWebSocketContainer().connectToServer(MessageHandler.class,
-                    URI.create("ws://" + ipAddress + ":" + port + "/websocket"));
-        } catch (IOException | DeploymentException e){
-            Loggers.system.error("Error Starting Session");
-        }
+        this.session = new FlowCollectorSession(ipAddress, port);
+        session.run();
     }
 
     public void closeSession() {
-        try {
-            session.close();
-        } catch (IOException e){
-            Loggers.system.error("Error Closing Session");
-        }
+        session.stop();
     }
 }
