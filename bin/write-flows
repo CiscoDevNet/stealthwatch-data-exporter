@@ -5,4 +5,4 @@ cd ${project_home}
 
 rm -rf log/*
 
-java -cp target/flow-forwarder-client-0.1.0-jar-with-dependencies.jar stealthwatch.flowforwarder.client.Main "$@"
+java -cp target/flow-forwarder-client-0.1.0-jar-with-dependencies.jar:lib/protos-2.3.0.jar stealthwatch.flowforwarder.client.Main "$@"
