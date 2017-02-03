@@ -10,4 +10,4 @@ target/
 out
 gen
 
-logs/
+log/
