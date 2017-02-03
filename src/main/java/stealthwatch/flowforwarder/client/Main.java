@@ -16,9 +16,8 @@ public class Main {
     }
 
     public static void main(String... hosts) throws Exception {
-        System.out.println("STARTING");
         if (hosts.length == 0) {
-            System.out.println("NO ARGS");
+            Loggers.system.error("No Flow Collector hostnames or IP Addresses provided.");
             System.exit(1);
         }
         FlowForwarderClient client = new FlowForwarderClient();
