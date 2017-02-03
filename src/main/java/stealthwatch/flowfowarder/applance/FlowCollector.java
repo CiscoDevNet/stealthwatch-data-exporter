@@ -18,10 +18,9 @@ public class FlowCollector {
     public FlowCollector(String ipAddress, SocketProtocol protocol) throws Exception{
         this.ipAddress = ipAddress;
         this.port = protocol.getPort();
-        startSession();
     }
 
-    private void startSession() throws Exception{
+    public void startSession() throws Exception{
         this.session = getWebSocketContainer().connectToServer(MessageHandler.class,
                 URI.create("ws://" + ipAddress + ":" + port + "/websocket"));
     }
