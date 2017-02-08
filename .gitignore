@@ -1,13 +1,9 @@
-# Created by .ignore support plugin (hsz.mobi)
-### Example user template template
-### Example user template
+# Ignore all hidden files and folders except .gitignore
+.*
+!.gitignore
 
-# IntelliJ project files
-.idea
-*.iml
-target/
-*.class
-out
-gen
+*.iml   # Intellij
+*.swp   # vi
+target/ # maven
+log/    # bin/write-flows
 
-log/
