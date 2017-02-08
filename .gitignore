@@ -1,9 +1,4 @@
-# Ignore all hidden files and folders except .gitignore
-.*
-!.gitignore
-
-*.iml   # Intellij
-*.swp   # vi
-target/ # maven
-log/    # bin/write-flows
-
+.idea
+*.iml
+target/
+log/
