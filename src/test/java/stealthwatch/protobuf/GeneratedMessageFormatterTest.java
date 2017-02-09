@@ -13,8 +13,7 @@ import static stealthwatch.protobuf.TestFunctions.epocMicroseconds;
 
 public class GeneratedMessageFormatterTest {
 
-    private final GeneratedMessageFormatter generatedMessageFormatter = new GeneratedMessageFormatter();
-    private final ExtFlow                   flow                      = ExtFlow
+    private final ExtFlow flow = ExtFlow
             .newBuilder()
             .setFlowId(13)
             .setClient(ExtFlowHost.newBuilder()
@@ -63,12 +62,12 @@ public class GeneratedMessageFormatterTest {
 
     @Test
     public void generatedMessageFormatter() throws Exception {
-        String logEntry = generatedMessageFormatter.format(flow);
+        GeneratedMessageFormatter formatter = new GeneratedMessageFormatter();
 
-        System.out.println(logEntry);
+        String logEntry = formatter.format(flow);
 
         assertTrue(logEntry.contains("flow_id=13|"));
-        assertTrue(logEntry.contains("|start_active_usec=2016-12-14 03:00:55"));
+        assertTrue(logEntry.contains("|start_active_usec=2016-12-14 03:00:5"));
         assertTrue(logEntry.contains("|last_active_usec=2017-02-15 13:45:23"));
         assertTrue(logEntry.contains("|service_port=55051|"));
         assertTrue(logEntry.contains("|flow_sensor_app_id=93|"));
