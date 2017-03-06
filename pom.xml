@@ -24,12 +24,12 @@
     <dependency>
       <groupId>org.glassfish.tyrus</groupId>
       <artifactId>tyrus-client</artifactId>
-      <version>1.13</version>
+      <version>1.13.1</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.tyrus</groupId>
       <artifactId>tyrus-container-grizzly-client</artifactId>
-      <version>1.13</version>
+      <version>1.13.1</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
@@ -49,11 +49,6 @@
       <version>2.6.1</version>
     </dependency>
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>21.0</version>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
@@ -68,9 +63,18 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.0.0</version>
         <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
+          <archive>
+            <!-- Main class will be added to manifest file and it will be possible to run jar
+             without explicitly declaring main class-->
+            <manifest>
+              <mainClass>stealthwatch.flowforwarder.client.Main</mainClass>
+            </manifest>
+          </archive>
+          <!-- This descriptor used to include system scope dependencies into final jar.
+           After we get rid of such dependencies we can remove it.-->
+          <descriptors>
+            <descriptor>assembly/assembly.xml</descriptor>
+          </descriptors>
         </configuration>
         <executions>
           <execution>
@@ -81,18 +85,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <addClasspath>true</addClasspath>
-              <mainClass>stealthwatch.flowforwarder.client.Main</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
       </plugin>
     </plugins>
   </build>

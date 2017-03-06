@@ -1,37 +1,35 @@
 package stealthwatch.flowforwarder.client;
 
-import java.util.List;
-
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
-import static stealthwatch.flowforwarder.client.SocketProtocol.HTTP;
-
 public class Main {
 
+    /*
+    * waitLock used here as replacement of endless loop
+    * */
     private static final Object waitLock = new Object();
 
-    private static void waitForTerminateSignal() {
+    private static void waitForTerminateSignal(FlowForwarderClient client) throws Exception {
         synchronized (waitLock) {
             try {
                 waitLock.wait();
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
+                Loggers.system.error("Exception occurred: ", e);
+            } finally {
+                client.stop();
             }
         }
     }
 
-    public static void main(String... hosts) throws Exception {
-        if (hosts.length == 0) {
-            Loggers.system.error("No Flow Collector hostnames or IP Addresses provided.");
+    public static void main(String... arguments) throws Exception {
+        ClientCLIArguments cliArgs = CLArgsHelper.parse(arguments);
+
+        if (!cliArgs.isValid()) {
+        	CLArgsHelper.printHelp();
             System.exit(1);
         }
 
-        List<FlowCollectorConnection> connections =
-                stream(hosts).map(host -> new FlowCollectorConnection(host, HTTP)).collect(toList());
-
-        connections.forEach(FlowCollectorConnection::run);
-
-        waitForTerminateSignal();
-
-        connections.forEach(FlowCollectorConnection::close);
+        FlowForwarderClient client = new FlowForwarderClient(cliArgs);
+        client.forwardFlows();
+        waitForTerminateSignal(client);
     }
+
 }

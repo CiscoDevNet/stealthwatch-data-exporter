@@ -1,0 +1,30 @@
+package stealthwatch.flowforwarder.client;
+
+import org.glassfish.tyrus.client.SslEngineConfigurator;
+
+/*
+* This class handles running and stopping collector-session thread.
+* */
+public class FlowCollector {
+    private final String hostAddress;
+    private FlowCollectorSession session;
+    private SslEngineConfigurator sslEngineConfigurator;
+
+    public FlowCollector(String hostAddress) {
+        this.hostAddress = hostAddress;
+    }
+
+    public FlowCollector(String hostAddress, SslEngineConfigurator sslEngineConfigurator) {
+        this.hostAddress = hostAddress;
+        this.sslEngineConfigurator = sslEngineConfigurator;
+    }
+
+    public void startSession() {
+        this.session = new FlowCollectorSession(hostAddress, sslEngineConfigurator);
+        session.start();
+    }
+
+    public void closeSession() {
+        session.interrupt();
+    }
+}
