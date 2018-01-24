@@ -9,7 +9,6 @@ package stealthwatch.flowforwarder.client;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.lancope.sw.ExternalFlowProtos.ExtFlow;
 import com.lancope.sw.ExternalFlowProtos.ExtFlows;
-
 import java.nio.ByteBuffer;
 import java.util.Date;
 import javax.websocket.ClientEndpoint;
@@ -19,9 +18,9 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
-/*
-* WebSocket client configuration using javax.websocket (glassfish.tyrus as implementation)
-* */
+/**
+ * WebSocket client configuration using javax.websocket (glassfish.tyrus as implementation)
+ */
 @ClientEndpoint
 public class MessageHandler {
 

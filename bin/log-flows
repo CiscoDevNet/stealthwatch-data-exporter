@@ -1,0 +1,18 @@
+#!/bin/bash
+
+project_home="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+cd ${project_home}
+
+host=$1
+
+rm -rf log/*
+
+java \
+    -cp target/flow-forwarder-client-1.0.0.jar:lib/protos-2.3.0.jar \
+    stealthwatch.flowforwarder.client.Main \
+    --allow-all-hosts \
+    --keystore certs/data-exporter.pkcs12 \
+    --keystore-password data-exporter \
+    --truststore certs/data-exporter-truststore.pkcs12 \
+    --truststore-password data-exporter-truststore \
+    wss://${host}/flowforwarder/websocket

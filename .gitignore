@@ -9,5 +9,6 @@ target/
 *.class
 out
 gen
+certs/
 
 log/

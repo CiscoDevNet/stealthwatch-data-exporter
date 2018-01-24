@@ -1,10 +1,46 @@
+<!DOCTYPE project [
+    <!ELEMENT project (modelVersion|groupId|artifactId|version|packaging|name|url|properties|dependencies|build)*>
+    <!ATTLIST project
+        xmlns CDATA #REQUIRED
+        xmlns:xsi CDATA #REQUIRED
+        xsi:schemaLocation CDATA #REQUIRED>
+    <!ELEMENT modelVersion (#PCDATA)>
+    <!ELEMENT groupId (#PCDATA)>
+    <!ELEMENT artifactId (#PCDATA)>
+    <!ELEMENT version (#PCDATA)>
+    <!ELEMENT packaging (#PCDATA)>
+    <!ELEMENT name (#PCDATA)>
+    <!ELEMENT url (#PCDATA)>
+    <!ELEMENT properties (project.build.sourceEncoding|maven.compiler.source|maven.compiler.target)*>
+    <!ELEMENT project.build.sourceEncoding (#PCDATA)>
+    <!ELEMENT maven.compiler.source (#PCDATA)>
+    <!ELEMENT maven.compiler.target (#PCDATA)>
+    <!ELEMENT dependencies (dependency)*>
+    <!ELEMENT dependency (groupId|artifactId|version|scope|systemPath)*>
+    <!ELEMENT scope (#PCDATA)>
+    <!ELEMENT systemPath (#PCDATA)>
+    <!ELEMENT build (plugins)*>
+    <!ELEMENT plugins (plugin)*>
+    <!ELEMENT plugin (groupId|artifactId|version|executions)*>
+    <!ELEMENT executions (execution)*>
+    <!ELEMENT execution (phase|goals|configuration)*>
+    <!ELEMENT phase (#PCDATA)>
+    <!ELEMENT goals (goal)*>
+    <!ELEMENT goal (#PCDATA)>
+    <!ELEMENT configuration (transformers)*>
+    <!ELEMENT transformers (transformer)*>
+    <!ELEMENT transformer (mainClass)*>
+    <!ATTLIST transformer
+        implementation CDATA #REQUIRED>
+    <!ELEMENT mainClass (#PCDATA)>
+    ]>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>stealthwatch</groupId>
   <artifactId>flow-forwarder-client</artifactId>
-  <version>0.1.0</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
   <name>Stealthwatch Flow Forwarder Client</name>
   <url>https://stash0.lancope.ciscolabs.com/projects/HACKDAYS/repos/flow-forwarder-client</url>
@@ -60,29 +96,24 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.0.0</version>
-        <configuration>
-          <archive>
-            <!-- Main class will be added to manifest file and it will be possible to run jar
-             without explicitly declaring main class-->
-            <manifest>
-              <mainClass>stealthwatch.flowforwarder.client.Main</mainClass>
-            </manifest>
-          </archive>
-          <!-- This descriptor used to include system scope dependencies into final jar.
-           After we get rid of such dependencies we can remove it.-->
-          <descriptors>
-            <descriptor>assembly/assembly.xml</descriptor>
-          </descriptors>
-        </configuration>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.2</version>
         <executions>
           <execution>
-            <id>assemble-all</id>
             <phase>package</phase>
             <goals>
-              <goal>single</goal>
+              <goal>shade</goal>
             </goals>
+            <configuration>
+              <dependencyReducedPomLocation>
+                target/dependency-reduced-pom.xml
+              </dependencyReducedPomLocation>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>stealthwatch.flowforwarder.client.Main</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
           </execution>
         </executions>
       </plugin>

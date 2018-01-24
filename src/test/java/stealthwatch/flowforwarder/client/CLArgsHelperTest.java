@@ -1,174 +1,112 @@
 package stealthwatch.flowforwarder.client;
 
+import org.junit.Test;
+import stealthwatch.flowforwarder.client.utils.ResourceUtil;
+
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-import stealthwatch.flowforwarder.client.utils.ResourceUtil;
-
-
-import java.util.Arrays;
-
-/**
- * The Unit Test for CLArgsHelper.
- */
 public class CLArgsHelperTest {
 
-    private static final String SECURE_HOST = "wss://10.0.37.30";
-    private static final String UNSECURE_HOST = "10.0.37.1";
+    private static final String SECURE_HOST   = "wss://10.0.37.30";
+    private static final String INSECURE_HOST = "10.0.37.1";
 
-    /**
-     * Test no arguments.
-     */
-    @Test
-    public void testNoArguments() {
-        String[] args = null;
-        ClientCLIArguments result = CLArgsHelper.parse(args);
-        assertFalse(result.isAskingForHelp());
-        assertFalse(result.isValid());
+    private ClientCLIArguments arguments;
+    private final String ksPath = ResourceUtil.getPath("ssl/client.p12");
+    private final String tsPath = ResourceUtil.getPath("ssl/truststore.p12");
 
-        args = new String[0];
-        result = CLArgsHelper.parse(args);
-        assertFalse(result.isAskingForHelp());
-        assertFalse(result.isValid());
-    }
-
-    /**
-     * Test asking for help.
-     */
     @Test
     public void testAskingForHelp() {
-        String[] args = {"-h"};
-        ClientCLIArguments result = CLArgsHelper.parse(args);
-        assertTrue(result.isAskingForHelp());
-        assertFalse(result.isValid());
+        arguments = CLArgsHelper.parse("-h");
+        assertTrue(arguments.isAskingForHelp());
+        assertFalse(arguments.isValid());
 
-        args[0] = "--help";
-        result = CLArgsHelper.parse(args);
-        assertTrue(result.isAskingForHelp());
-        assertFalse(result.isValid());
+        arguments = CLArgsHelper.parse("--help");
+        assertTrue(arguments.isAskingForHelp());
+        assertFalse(arguments.isValid());
     }
 
-    /**
-     * Test no hosts.
-     */
     @Test
     public void testNoHosts() {
-        String[] args = {"-d"};
-        ClientCLIArguments result = CLArgsHelper.parse(args);
-        assertFalse(result.isValid());
+        arguments = CLArgsHelper.parse("-d");
+        assertFalse(arguments.isValid());
     }
 
-    /**
-     * Test args with multiple hosts.
-     */
     @Test
     public void testMultipleHosts() {
-        String[] args = {UNSECURE_HOST, UNSECURE_HOST, UNSECURE_HOST};
-        ClientCLIArguments result = CLArgsHelper.parse(args);
-        assertEquals(Arrays.asList(args), result.getHosts());
+        arguments = CLArgsHelper.parse(INSECURE_HOST, INSECURE_HOST, INSECURE_HOST);
+        assertEquals(asList(INSECURE_HOST, INSECURE_HOST, INSECURE_HOST), arguments.getHosts());
     }
 
-    /**
-     * Test unsecure connection.
-     */
     @Test
     public void testUnsecureConnection() {
-        String[] args = {UNSECURE_HOST};
-        ClientCLIArguments result = CLArgsHelper.parse(args);
-        assertTrue(result.isValid());
+        arguments = CLArgsHelper.parse(INSECURE_HOST);
+        assertTrue(arguments.isValid());
     }
 
-    /**
-     * Test secure connection.
-     */
     @Test
     public void testSecureConnection() {
-        String ksPath = ResourceUtil.getPath("ssl/client.p12");
-        String ksPass = "pw.client-export";
-        String tsPath = ResourceUtil.getPath("ssl/truststore.p12");
-        String tsPass = "pw.trust";
+        arguments = CLArgsHelper.parse("-ks", ksPath, "-ksp", "pw.client-export", "-ts", tsPath, "-tsp",
+                                       "pw.trust", SECURE_HOST, SECURE_HOST);
 
-        String[] args = {"-ks", ksPath, "-ksp", ksPass, "-ts", tsPath, "-tsp", tsPass, SECURE_HOST, SECURE_HOST};
-        ClientCLIArguments result = CLArgsHelper.parse(args);
-        assertSecureArgs(result, ksPath, ksPass, tsPath, tsPass);
-        assertTrue(result.isValid());
+        assertEquals(ksPath, arguments.getKeyStorePath());
+        assertEquals("pw.client-export", arguments.getKeyStorePassword());
+        assertEquals(tsPath, arguments.getTrustStorePath());
+        assertEquals("pw.trust", arguments.getTrustStorePassword());
+        assertTrue(arguments.isValid());
     }
 
-    /**
-     * Test default secure params.
-     */
-    @Test
-    public void testDefaultSecureParams() {
-        String[] args = {SECURE_HOST};
-        ClientCLIArguments result = CLArgsHelper.parse(args);
-        assertSecureArgs(result, "ssl/client.p12", "pw.client-export", "ssl/truststore.p12", "pw.trust");
-    }
-
-
-    /**
-     * Test secure connection invalid args.
-     */
     @Test
     public void testSecureConnectionInvalidArgs() {
-        String validKsPath = ResourceUtil.getPath("ssl/client.p12");
-        String validTsPath = ResourceUtil.getPath("ssl/truststore.p12");
-        String invalidPath = "/some/path";
-
-        String[] invalidKsArgs = {"-ks", invalidPath, "-ts", validTsPath, SECURE_HOST};
+        String[] invalidKsArgs = {"-ks", "/some/path", "-ts", tsPath, SECURE_HOST};
         ClientCLIArguments result = CLArgsHelper.parse(invalidKsArgs);
-        assertEquals(invalidPath, result.getKeyStorePath());
+        assertEquals("/some/path", result.getKeyStorePath());
         assertFalse(result.isValid());
 
         invalidKsArgs[0] = "--keystore";
         result = CLArgsHelper.parse(invalidKsArgs);
-        assertEquals(invalidPath, result.getKeyStorePath());
+        assertEquals("/some/path", result.getKeyStorePath());
         assertFalse(result.isValid());
 
-        String[] invalidTsArgs = {"-ks", validKsPath, "-ts", invalidPath, SECURE_HOST};
+        String[] invalidTsArgs = {"-ks", ksPath, "-ts", "/some/path", SECURE_HOST};
         result = CLArgsHelper.parse(invalidTsArgs);
-        assertEquals(invalidPath, result.getTrustStorePath());
+        assertEquals("/some/path", result.getTrustStorePath());
         assertFalse(result.isValid());
 
         invalidKsArgs[2] = "--truststore";
         result = CLArgsHelper.parse(invalidTsArgs);
-        assertEquals(invalidPath, result.getTrustStorePath());
+        assertEquals("/some/path", result.getTrustStorePath());
         assertFalse(result.isValid());
     }
 
-    /**
-     * Test secure connection all valid args
-     */
     @Test
     public void testSecureConnectionAllValidArguments() {
-        String ksPath = ResourceUtil.getPath("ssl/client.p12");
-        String ksPass = "pw.client-export";
-        String tsPath = ResourceUtil.getPath("ssl/truststore.p12");
-        String tsPass = "pw.trust";
-
-        String[] args = {"-a", "-d", "-ks", ksPath, "-ksp", ksPass, "-ts", tsPath, "-tsp", tsPass, SECURE_HOST};
-        assertAllSecureArgs(args, ksPath, ksPass, tsPath, tsPass);
-
-        String[] argsFullNames = {"--allow-all-hosts", "--debug-ssl", "--keystore", ksPath, "--keystore-password", ksPass,
-                "--truststore", tsPath, "--truststore-password", tsPass, SECURE_HOST};
-        assertAllSecureArgs(argsFullNames, ksPath, ksPass, tsPath, tsPass);
+        arguments = CLArgsHelper.parse("-a", "-d", "-ks", ksPath, "-ksp", "pw.client-export", "-ts",
+                                       tsPath, "-tsp", "pw.trust", SECURE_HOST);
+        assertFalse(arguments.isAskingForHelp());
+        assertTrue(arguments.isBypassHostVerification());
+        assertTrue(arguments.isDebugSSlConnection());
+        assertEquals(ksPath, arguments.getKeyStorePath());
+        assertEquals("pw.client-export", arguments.getKeyStorePassword());
+        assertEquals(tsPath, arguments.getTrustStorePath());
+        assertEquals("pw.trust", arguments.getTrustStorePassword());
+        assertTrue(arguments.isValid());
     }
 
-    private void assertAllSecureArgs(String[] args, String ksPath, String ksPass, String tsPath, String tsPass) {
-        ClientCLIArguments result = CLArgsHelper.parse(args);
-        assertFalse(result.isAskingForHelp());
-        assertTrue(result.isBypassHostVerification());
-        assertTrue(result.isDebugSSlConnection());
-        assertSecureArgs(result, ksPath, ksPass, tsPath, tsPass);
-        assertTrue(result.isValid());
+    @Test
+    public void testSecureConnectionAllValidArgumentsWithLongNames() {
+        arguments = CLArgsHelper.parse("--allow-all-hosts", "--debug-ssl", "--keystore", ksPath,
+                                       "--keystore-password", "pw.client-export", "--truststore", tsPath,
+                                       "--truststore-password", "pw.trust", SECURE_HOST);
+        assertFalse(arguments.isAskingForHelp());
+        assertTrue(arguments.isBypassHostVerification());
+        assertTrue(arguments.isDebugSSlConnection());
+        assertEquals(ksPath, arguments.getKeyStorePath());
+        assertEquals("pw.client-export", arguments.getKeyStorePassword());
+        assertEquals(tsPath, arguments.getTrustStorePath());
+        assertEquals("pw.trust", arguments.getTrustStorePassword());
+        assertTrue(arguments.isValid());
     }
-
-    private void assertSecureArgs(ClientCLIArguments result, String ksPath, String ksPass, String tsPath, String tsPass) {
-        assertEquals(ksPath, result.getKeyStorePath());
-        assertEquals(ksPass, result.getKeyStorePassword());
-        assertEquals(tsPath, result.getTrustStorePath());
-        assertEquals(tsPass, result.getTrustStorePassword());
-    }
-
 }
