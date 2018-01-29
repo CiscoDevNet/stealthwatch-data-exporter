@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 
 import static java.lang.String.format;
@@ -76,9 +77,6 @@ class FieldFormatter {
      * @return the string
      */
     static String formatDateFromMicroseconds(long microseconds) {
-        long milliseconds = microseconds / 1000L;
-        long remaining = microseconds % 1000L;
-        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date(milliseconds));
-        return format("%s%03d", date, remaining);
+        return Instant.ofEpochMilli(microseconds / 1000L).toString();
     }
 }
