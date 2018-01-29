@@ -16,7 +16,7 @@ import org.glassfish.tyrus.client.SslEngineConfigurator;
 
 import static javax.websocket.ContainerProvider.getWebSocketContainer;
 
-public class FlowCollectorSession extends Thread {
+class FlowCollectorSession extends Thread {
 
     private final String                hostAddress;
     private final SslEngineConfigurator sslEngineConfigurator;

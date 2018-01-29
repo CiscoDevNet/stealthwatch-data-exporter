@@ -4,7 +4,7 @@ import java.net.URL;
 
 public class ResourceUtil {
 
-    private static ClassLoader classLoaderClass = ResourceUtil.class.getClassLoader();
+    private static final ClassLoader classLoaderClass = ResourceUtil.class.getClassLoader();
 
     public static String getPath(String name) {
         URL url = classLoaderClass.getResource(name);

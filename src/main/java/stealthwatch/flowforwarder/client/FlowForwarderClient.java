@@ -11,43 +11,43 @@ import java.util.Collection;
 import org.glassfish.tyrus.client.SslContextConfigurator;
 import org.glassfish.tyrus.client.SslEngineConfigurator;
 
+import static org.glassfish.tyrus.client.SslContextConfigurator.KEY_FACTORY_MANAGER_ALGORITHM;
+import static org.glassfish.tyrus.client.SslContextConfigurator.KEY_STORE_FILE;
+import static org.glassfish.tyrus.client.SslContextConfigurator.KEY_STORE_PASSWORD;
+import static org.glassfish.tyrus.client.SslContextConfigurator.KEY_STORE_TYPE;
+import static org.glassfish.tyrus.client.SslContextConfigurator.TRUST_STORE_FILE;
+import static org.glassfish.tyrus.client.SslContextConfigurator.TRUST_STORE_PASSWORD;
+import static org.glassfish.tyrus.client.SslContextConfigurator.TRUST_STORE_TYPE;
+
 class FlowForwarderClient {
-
-    /** The Constant KEY_STORE_ALG. */
-    private static final String KEY_STORE_ALG = "SunX509";
-
-    /** The Constant STORE_TYPE. */
-    private static final String STORE_TYPE = "PKCS12";
 
     private final Collection<FlowCollector> flowCollectors = new ArrayList<>();
 
-    /** The command line interface arguments. */
-    private final ClientCLIArguments cliArgs;
-
-    /** The ssl engine configurator. */
-    private SslEngineConfigurator sslEngineConfigurator;
-
-    FlowForwarderClient(ClientCLIArguments cliArgs) {
-        this.cliArgs = cliArgs;
-        if (cliArgs.anySecureConnections()) {
-            if (cliArgs.isDebugSSlConnection()) {
-                System.setProperty("javax.net.debug", "all");
-            }
-            System.setProperty(SslContextConfigurator.KEY_FACTORY_MANAGER_ALGORITHM, KEY_STORE_ALG);
-            System.setProperty(SslContextConfigurator.KEY_STORE_FILE, cliArgs.getKeyStorePath());
-            System.setProperty(SslContextConfigurator.KEY_STORE_TYPE, STORE_TYPE);
-            System.setProperty(SslContextConfigurator.TRUST_STORE_FILE, cliArgs.getTrustStorePath());
-            System.setProperty(SslContextConfigurator.TRUST_STORE_TYPE, STORE_TYPE);
-            SslContextConfigurator defaultConfig = new SslContextConfigurator();
-            String tsp = cliArgs.getTrustStorePassword();
-            defaultConfig.setTrustStorePassword(tsp);
-            System.setProperty(SslContextConfigurator.TRUST_STORE_PASSWORD, tsp);
-            String ksp = cliArgs.getKeyStorePassword();
-            defaultConfig.setKeyStorePassword(ksp);
-            System.setProperty(SslContextConfigurator.KEY_STORE_PASSWORD, ksp);
-            sslEngineConfigurator = new SslEngineConfigurator(defaultConfig, true, false, false);
-            sslEngineConfigurator.setHostVerificationEnabled(!cliArgs.isBypassHostVerification());
+    FlowForwarderClient(Configuration configuration) {
+        if (configuration.debugSSlConnection) {
+            System.setProperty("javax.net.debug", "all");
         }
+        System.setProperty(KEY_FACTORY_MANAGER_ALGORITHM, "SunX509");
+        System.setProperty(KEY_STORE_FILE, configuration.keyStorePath);
+        System.setProperty(KEY_STORE_PASSWORD, configuration.keyStorePassword);
+        System.setProperty(KEY_STORE_TYPE, "PKCS12");
+        System.setProperty(TRUST_STORE_FILE, configuration.trustStorePath);
+        System.setProperty(TRUST_STORE_PASSWORD, configuration.trustStorePassword);
+        System.setProperty(TRUST_STORE_TYPE, "PKCS12");
+
+        SslContextConfigurator defaultConfig = new SslContextConfigurator();
+        defaultConfig.setKeyStorePassword(configuration.keyStorePassword);
+        defaultConfig.setTrustStorePassword(configuration.trustStorePassword);
+
+        final SslEngineConfigurator sslEngineConfigurator =
+                new SslEngineConfigurator(defaultConfig, true, false, false);
+        sslEngineConfigurator.setHostVerificationEnabled(!configuration.bypassHostVerification);
+
+        configuration.hosts.stream()
+                           .map(host -> host.startsWith("wss")
+                                   ? new FlowCollector(host, sslEngineConfigurator)
+                                   : new FlowCollector(host))
+                           .forEach(flowCollectors::add);
     }
 
     /**
@@ -55,21 +55,13 @@ class FlowForwarderClient {
      * Each flow collector will be started in separate thread.
      */
     void forwardFlows() {
-        for (String host : cliArgs.getHosts()) {
-            FlowCollector flowCollector = host.startsWith("wss")
-                    ? new FlowCollector(host, sslEngineConfigurator)
-                    : new FlowCollector(host);
-            flowCollectors.add(flowCollector);
-            flowCollector.startSession();
-        }
+        flowCollectors.forEach(FlowCollector::startSession);
     }
 
     /**
      * Stops flow collectors.
      */
     void stop() {
-        for (FlowCollector flowCollector : flowCollectors) {
-            flowCollector.closeSession();
-        }
+        flowCollectors.forEach(FlowCollector::closeSession);
     }
 }

@@ -1,49 +1,13 @@
-<!DOCTYPE project [
-    <!ELEMENT project (modelVersion|groupId|artifactId|version|packaging|name|url|properties|dependencies|build)*>
-    <!ATTLIST project
-        xmlns CDATA #REQUIRED
-        xmlns:xsi CDATA #REQUIRED
-        xsi:schemaLocation CDATA #REQUIRED>
-    <!ELEMENT modelVersion (#PCDATA)>
-    <!ELEMENT groupId (#PCDATA)>
-    <!ELEMENT artifactId (#PCDATA)>
-    <!ELEMENT version (#PCDATA)>
-    <!ELEMENT packaging (#PCDATA)>
-    <!ELEMENT name (#PCDATA)>
-    <!ELEMENT url (#PCDATA)>
-    <!ELEMENT properties (project.build.sourceEncoding|maven.compiler.source|maven.compiler.target)*>
-    <!ELEMENT project.build.sourceEncoding (#PCDATA)>
-    <!ELEMENT maven.compiler.source (#PCDATA)>
-    <!ELEMENT maven.compiler.target (#PCDATA)>
-    <!ELEMENT dependencies (dependency)*>
-    <!ELEMENT dependency (groupId|artifactId|version|scope|systemPath)*>
-    <!ELEMENT scope (#PCDATA)>
-    <!ELEMENT systemPath (#PCDATA)>
-    <!ELEMENT build (plugins)*>
-    <!ELEMENT plugins (plugin)*>
-    <!ELEMENT plugin (groupId|artifactId|version|executions)*>
-    <!ELEMENT executions (execution)*>
-    <!ELEMENT execution (phase|goals|configuration)*>
-    <!ELEMENT phase (#PCDATA)>
-    <!ELEMENT goals (goal)*>
-    <!ELEMENT goal (#PCDATA)>
-    <!ELEMENT configuration (transformers)*>
-    <!ELEMENT transformers (transformer)*>
-    <!ELEMENT transformer (mainClass)*>
-    <!ATTLIST transformer
-        implementation CDATA #REQUIRED>
-    <!ELEMENT mainClass (#PCDATA)>
-    ]>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>stealthwatch</groupId>
-  <artifactId>flow-forwarder-client</artifactId>
+  <artifactId>data-exporter</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
-  <name>Stealthwatch Flow Forwarder Client</name>
-  <url>https://stash0.lancope.ciscolabs.com/projects/HACKDAYS/repos/flow-forwarder-client</url>
+  <name>Stealthwatch Data Exporter</name>
+  <url>https://github.com/CiscoDevNet/stealthwatch-data-exporter</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -54,8 +18,8 @@
   <dependencies>
     <dependency>
       <groupId>javax.websocket</groupId>
-      <artifactId>javax.websocket-client-api</artifactId>
-      <version>1.0</version>
+      <artifactId>javax.websocket-api</artifactId>
+      <version>1.1</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.tyrus</groupId>

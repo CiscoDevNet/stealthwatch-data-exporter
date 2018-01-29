@@ -8,7 +8,7 @@ package stealthwatch.flowforwarder.client;
 
 import org.apache.log4j.Logger;
 
-public interface Loggers {
+interface Loggers {
 
     Logger system = Logger.getLogger("system");
     Logger message = Logger.getLogger("message");

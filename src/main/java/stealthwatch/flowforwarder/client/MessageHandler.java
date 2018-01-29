@@ -17,6 +17,7 @@ import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import stealthwatch.protobuf.GeneratedMessageFormatter;
 
 /**
  * WebSocket client configuration using javax.websocket (glassfish.tyrus as implementation)
@@ -24,11 +25,13 @@ import javax.websocket.Session;
 @ClientEndpoint
 public class MessageHandler {
 
+    private final GeneratedMessageFormatter formatter = new GeneratedMessageFormatter();
+
     @OnMessage
     public void onMessage(ByteBuffer message) {
         try {
             for (ExtFlow extFlow : ExtFlows.parseFrom(message.array()).getFlowList()) {
-                Loggers.message.info(">>> " + ExtFlowFunctions.fromFlowExtToString(extFlow));
+                Loggers.message.info(formatter.format(extFlow));
             }
         } catch (InvalidProtocolBufferException e) {
             Loggers.system.info("Unable to parse message.", e);
@@ -37,11 +40,11 @@ public class MessageHandler {
 
     @OnOpen
     public void onOpen(Session session) {
-        Loggers.system.info("Socket Opened at  " + new Date().toString() + " " + session.getId());
+        Loggers.system.info("Socket Opened at  " + new Date() + ' ' + session.getId());
     }
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        Loggers.system.info("Socket Closed  at  " + new Date().toString() + " " + session.getId());
+        Loggers.system.info("Socket Closed  at  " + new Date() + ' ' + session.getId());
     }
 }
