@@ -3,12 +3,19 @@
 project_home="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 cd ${project_home}
 
+if [ $# -eq 0 ]; then
+    echo "No hostname or IP address supplied"
+    echo
+    echo "usage: log-flows hostname-or-ip-address"
+    exit 1
+fi
+
 host=$1
 
 rm -rf log/*
 
 java \
-    -cp target/flow-forwarder-client-1.0.0.jar:lib/protos-2.3.0.jar \
+    -cp target/data-exporter-1.0.0.jar:lib/protos-2.3.0.jar \
     stealthwatch.flowforwarder.client.Main \
     --allow-all-hosts \
     --keystore certs/data-exporter.pkcs12 \
