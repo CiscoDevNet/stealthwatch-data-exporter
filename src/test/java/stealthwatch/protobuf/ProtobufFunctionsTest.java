@@ -60,7 +60,7 @@ public class ProtobufFunctionsTest {
 
         assertFalse(IS_EPOC_MICROSECONDS.test(anotherField));
         assertTrue(IS_EPOC_MICROSECONDS.test(lastActiveUsec));
-        assertEquals("last_active_usec=2017-02-02 17:40:26.020010",
+        assertEquals("last_active_usec=2017-02-02T22:40:26.020Z",
                      FROM_EPOC_MICROSECONDS_TO_STRING.apply(lastActiveUsec));
     }
 

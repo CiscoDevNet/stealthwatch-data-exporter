@@ -10,10 +10,9 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.lancope.sw.AddressProtos.IPAddress;
 import com.lancope.sw.AddressProtos.MacAddress;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -36,12 +35,7 @@ interface ProtobufFunctions {
             field -> field.getKey().getName().endsWith("_usec");
 
     Function<Entry<FieldDescriptor, Object>, String> FROM_EPOC_MICROSECONDS_TO_STRING =
-            field -> {
-                long microseconds = (Long) field.getValue();
-                Date time = new Date(microseconds / 1000L);
-                String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(time);
-                return format(field, String.format("%s%03d", date, microseconds % 1000L));
-            };
+            field -> format(field, Instant.ofEpochMilli((Long) field.getValue() / 1000L).toString());
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
