@@ -1,0 +1,15 @@
+syntax = "proto2";
+package com.lancope.sw;
+
+option java_package = "com.lancope.sw";
+option java_outer_classname = "AddressProtos";
+
+message IPAddress {
+	required int64 a0 = 1;			// lower 64 bits of v6 address or v4 address
+	required int64 a1 = 2;			// upper 64 bits of v6 address
+}
+
+message MacAddress {
+	required int64 a = 1;			// 6-byte mac address
+}
+

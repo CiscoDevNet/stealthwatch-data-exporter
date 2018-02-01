@@ -1,0 +1,101 @@
+syntax = "proto2";
+import "address.proto";
+
+package com.lancope.sw;
+
+option java_package = "com.lancope.sw";
+option java_outer_classname = "ExternalFlowProtos";
+
+message ExtTlsVersion {
+	optional int32 major = 1;						// major version number
+	optional int32 minor = 2;						// minor version number
+}
+
+message ExtFlowHost {
+	optional IPAddress ip = 1;						// IP address of host endpoint
+	optional int32 port = 2;						// port used with TCP or UDP (16-bits)
+	optional int32 port_max = 28;					// port range when set (from port to port_max)
+
+	optional IPAddress xlate_ip = 3;				// translated IP address
+	optional int32 xlate_port = 4;					// translated port with TCP or UDP
+
+	optional MacAddress mac = 5;					// mac address
+	optional int32 asn = 6;							// autonomous system number
+	optional bytes payload = 7;						// payload (26 max)
+	optional bytes payload_ex = 8;					// payload_ex (1K max)
+
+	repeated int32 group_list = 9 [packed=true];	// list of group ids
+//	optional int32 vm_id = 10;						// vm id - DEPRECATED
+//	optional int32 vm_server_id = 11;				// vm server id - DEPRECATED
+	optional int64 num_bytes = 12;					// number of bytes sourced for period
+	optional int64 num_packets = 13;				// number of packets sourced  for period
+	optional int32 syn_packets = 14;				// SYN packet count
+	optional int32 syn_ack_packets = 15;			// SYN-ACK packet count
+	optional int32 rst_packets = 16;				// RST packet count
+	optional int32 fin_packets = 17;				// FIN packet count
+	optional int32 sgt_id = 18;						// TrustSec security group tag id
+	optional string sgt_name = 19;					// TrustSec security group tag name
+	optional int64 total_bytes = 20;				// number of total bytes since the flow started
+	optional int64 total_packets = 21;				// number of total pkts since the flow started
+
+	optional string process_name = 22;				// Name of the Process from endpoint data
+	optional string process_hash = 23;				// Hash of Process from endpoint data
+	optional string process_username = 24;			// Process Username from endpoint data
+	optional string parent_process_name = 25;       // Name of the Parent Process from endpoint data
+	optional string parent_process_hash = 26;		// Hash of Parent Process from endpoint data
+	optional string parent_process_username = 27;   // Parent Process Username from endpoint data
+
+	optional bytes idp = 29;						// ETTA's Initial Data Packet
+	repeated sint32 packet_lengths = 30 [packed=true];				// ETTA's SPL - First N payload lengths for packets with application data
+	repeated uint32 packet_inter_arrival_times = 31 [packed=true];	// ETTA's SPT - First N inter-arrival times for packets with application data
+	repeated uint32 byte_distribution = 32;			// ETTA's Byte Distribution
+	optional ExtTlsVersion tls_version = 33;			// TLS version parsed from ETTA's IDP
+	optional bytes tls_session_id = 34;				// TLS session parsed from ETTA's IDP
+	optional bytes payload_binary = 35;				// raw payload
+	optional bytes payload_ex_binary = 36;			// raw payload_ex
+}
+
+message ExtFlowExporter {
+	required IPAddress ip = 1;						// IP address of exporter
+	required int32 interface = 2;					// interface number
+}
+
+message ExtFlow {
+	required int64 flow_id = 1;						// flow identifier
+	optional int64 start_active_usec = 2;			// start time (microseconds offset from unix epoch)
+	optional int64 last_active_usec = 3;			// last active time (microseconds offset from unix epoch)
+
+	optional ExtFlowHost client = 5;					// client host: attributes and flow statistics
+	optional ExtFlowHost server = 6;					// server host: attributes and flow statistics
+
+	optional int32 service_port = 7;				// well-known service port
+	optional int32 protocol = 8;					// protocol (1-byte)
+	optional int32 service_id = 9;					// service id
+
+	optional int32 app_id = 10;						// app id
+	optional int32 flow_sensor_app_id = 11;			// flow sensor app id
+	optional int32 packetshaper_app_id = 12;		// packet shaper app id
+	optional int32 nbar_app_id = 13;				// nbar app id
+	optional string palo_alto_app_id = 14;			// palo alto app id
+	optional string username = 15;					// username
+
+	optional int32 vlan_id = 16;					// vlan id
+	optional int32 mpls_label = 17;					// mpls label
+
+	optional int32 connections = 18;				// connection count
+	optional int32 retransmits = 19;				// retransmit count
+	optional int32 rtt = 20;						// round trip time
+	optional int32 srt = 21;						// server response time
+//	optional int32 svrd = 22;						// SVRD metric - DEPRECATED
+
+	optional int64 sequence_num = 23;				// flow sequence number (in export order)
+	optional IPAddress fc_ip = 24;					// Flow Collector IP address
+	repeated ExtFlowExporter exporters = 25;			// list of exporters
+	optional bytes selected_cipher_suite = 26;		// Cipher suite selected by server and parsed from ETTA's IDP
+	optional int32 netflow_count = 27;				// Number of records within the stitched and de-duped flow
+}
+
+message ExtFlows {
+	repeated ExtFlow flow = 1;
+}
+

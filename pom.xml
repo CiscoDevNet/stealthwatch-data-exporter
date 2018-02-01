@@ -11,6 +11,15 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <protobuf.input.directory>${project.basedir}/src/main/resources/protos/</protobuf.input.directory>
+    <protobuf.output.directory>${project.build.directory}/generated-sources/</protobuf.output.directory>
+    <version.build-helper-maven-plugin>3.0.0</version.build-helper-maven-plugin>
+    <version.maven-antrun-plugin>1.8</version.maven-antrun-plugin>
+    <version.maven-dependency-plugin>3.0.1</version.maven-dependency-plugin>
+    <version.os-maven-plugin>1.5.0.Final</version.os-maven-plugin>
+    <version.protobuf>2.6.1</version.protobuf>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
@@ -37,13 +46,6 @@
       <version>1.2.17</version>
     </dependency>
     <dependency>
-      <groupId>com.lancope.proto</groupId>
-      <artifactId>protos</artifactId>
-      <version>2.3.0</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/lib/protos-2.3.0.jar</systemPath>
-    </dependency>
-    <dependency>
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
       <version>2.6.1</version>
@@ -57,7 +59,116 @@
   </dependencies>
 
   <build>
+    <extensions>
+      <extension>
+        <groupId>kr.motd.maven</groupId>
+        <artifactId>os-maven-plugin</artifactId>
+        <version>${version.os-maven-plugin}</version>
+      </extension>
+    </extensions>
+
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${version.maven-dependency-plugin}</version>
+        <executions>
+          <execution>
+            <id>copy-protoc</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.google.protobuf</groupId>
+                  <artifactId>protoc</artifactId>
+                  <version>${version.protobuf}</version>
+                  <classifier>${os.detected.classifier}</classifier>
+                  <type>exe</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>${version.maven-antrun-plugin}</version>
+        <executions>
+          <execution>
+            <id>exec-protoc</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <target>
+                <property name="protoc.filename"
+                          value="protoc-${version.protobuf}-${os.detected.classifier}.exe"/>
+                <property name="protoc.filepath" value="${project.build.directory}/${protoc.filename}"/>
+                <chmod file="${protoc.filepath}" perm="ugo+rx"/>
+                <mkdir dir="${protobuf.output.directory}"/>
+                <path id="protobuf.input.filepaths.path">
+                  <fileset dir="${protobuf.input.directory}">
+                    <include name="**/*.proto"/>
+                  </fileset>
+                </path>
+                <pathconvert pathsep=" " property="protobuf.input.filepaths"
+                             refid="protobuf.input.filepaths.path"/>
+                <exec executable="${protoc.filepath}" failonerror="true">
+                  <arg value="-I"/>
+                  <arg value="${protobuf.input.directory}"/>
+                  <arg value="--java_out"/>
+                  <arg value="${protobuf.output.directory}"/>
+                  <arg line="${protobuf.input.filepaths}"/>
+                </exec>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>${version.build-helper-maven-plugin}</version>
+        <executions>
+          <execution>
+            <id>add-classes</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${protobuf.output.directory}</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
