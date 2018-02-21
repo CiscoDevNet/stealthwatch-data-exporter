@@ -41,9 +41,34 @@ This means you need to:
 The `bin/generate-certs-and-keystore` script accomplishes steps 1-5.  All created certs
 appear in the `./certs` directory.
 
+    $ bin/generate-certs-and-keystore flow-collector-ip-or-hostname
+    
 Import `certs/data-exporter-certificate-authority.crt` into the Flow Collector via the 
 `Configuration -> Certificate Authority Certificates` menu.
 
+The script generates these files:
+
+  * `data-exporter-certificate-authority.key` – the certificate authority key
+
+  * `data-exporter-certificate-authority.crt` – the certificate authority certificate 
+    imported into Stealthwatch.
+
+  * `data-exporter.key` – the key of the data exporter application
+
+  * `data-exporter.csr` – the certificate signing request used to ask the certificate 
+    authority for a certificate
+
+  * `data-exporter.crt` – the data exporter certificate signed by the certificate authority
+
+  * `data-exporter.pkcs12` – the data exporter’s key and certificate stored in pkcs12 format
+
+  * `{flow-collector-alias}.crt` – the flow collector's certificate
+
+  * `data-exporter-truststore.pkcs12` – the trust store holding the flow collector’s certificate.
+
+The `data-exporter.pkcs12` and `data-exporter-truststore.pkcs12` are used by log-flows to setup 
+the secure web socket connection.
+  
 Running the application
 -----------------------
 
