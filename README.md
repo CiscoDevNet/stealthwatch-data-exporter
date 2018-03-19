@@ -17,9 +17,8 @@ Dependencies
 * Java 8 JDK
 * [Java Cryptography Extension](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html)
 * Maven 3.3.9
-
-This project requires the Stealthwatch `lib/protos-2.3.0.jar` to parse the external
-flow records.  Future versions of the Data Exporter client as new fields are available.
+* bash
+* openssl
 
 Setup Instructions
 ------------------
