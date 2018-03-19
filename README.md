@@ -106,7 +106,7 @@ The actual container name is `flow-forwarder`.  Its logs are found in
 
 The `flow-forwarder` waits for websocket connection attempts on 
 `wss://<hostname-or-ip>/flowforwarder/websocket` or
-`ws://<hostname-or-ip>/flowforwarder/websocket:8092`.  
+`ws://<hostname-or-ip>:8092/websocket`.  
 
-NOTE: port 8092 is not open by default on the flow collector - only connections
+NOTE: port 8092 is closed by default on the flow collector - only connections
 originating from the Flow Collector itself are supported.
