@@ -15,10 +15,20 @@ Dependencies
 ------------
 
 * Java 8 JDK
-* [Java Cryptography Extension](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html)
 * Maven 3.3.9
 * bash
 * openssl
+
+Java Cryptography Extension (JCE)
+---------------------------------
+
+Download the [JCE](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html).
+
+Unzip the downloaded zip.
+
+Copy `local_policy.jar` and `US_export_policy.jar` to the `$JAVA_HOME/jre/lib/security` directory.
+
+(Note: these jars will be already there so you have to overwrite them).
 
 Setup Instructions
 ------------------
