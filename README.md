@@ -77,7 +77,20 @@ The script generates these files:
 
 The `data-exporter.pkcs12` and `data-exporter-truststore.pkcs12` are used by log-flows to setup 
 the secure web socket connection.
-  
+
+Stealthwatch prior to 7.0
+-------------------------
+
+Import `certs/data-exporter-certificate-authority.crt` into the Flow Collector via the
+`Configuration -> Certificate Authority Certificates` menu.
+
+Stealthwatch 7.0 and after
+--------------------------
+
+Import `certs/data-exporter-certificate-authority.crt` and 
+`certs/data-exporter.crt` into the Flow Collector via the
+`Configuration -> Certificate Authority Certificates` menu.
+
 Running the application
 -----------------------
 
@@ -119,3 +132,4 @@ The `flow-forwarder` waits for websocket connection attempts on
 
 NOTE: port 8092 is closed by default on the flow collector - only connections
 originating from the Flow Collector itself are supported.
+
