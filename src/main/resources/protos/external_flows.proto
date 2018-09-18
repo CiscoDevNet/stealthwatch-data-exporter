@@ -11,6 +11,16 @@ message ExtTlsVersion {
 	optional int32 minor = 2;						// minor version number
 }
 
+message ExtEtaSplt {
+	optional int32 src_port = 1;									// The source port with which this SPLT was reported by the exporter
+	optional int32 dst_port = 2;									// The destination port with which this SPLT was reported by the exporter
+	optional int64 time_seen = 3;									// The time on which this SPLT was reported by the exporter,
+																	// can come from many places, like a couple of different netflow fields
+																	// or internal assignment in engine's logic
+	repeated sint32 packet_lengths = 4 [packed=true];				// ETA's SPL - First N payload lengths for packets with application data
+	repeated uint32 packet_inter_arrival_times = 5 [packed=true];	// ETA's SPT - First N inter-arrival times for packets with application data
+}
+
 message ExtFlowHost {
 	optional IPAddress ip = 1;						// IP address of host endpoint
 	optional int32 port = 2;						// port used with TCP or UDP (16-bits)
@@ -46,13 +56,14 @@ message ExtFlowHost {
 	optional string parent_process_username = 27;   // Parent Process Username from endpoint data
 
 	optional bytes idp = 29;						// ETTA's Initial Data Packet
-	repeated sint32 packet_lengths = 30 [packed=true];				// ETTA's SPL - First N payload lengths for packets with application data
-	repeated uint32 packet_inter_arrival_times = 31 [packed=true];	// ETTA's SPT - First N inter-arrival times for packets with application data
+//	repeated sint32 packet_lengths = 30 [packed=true];				// DEPRECATED - ETTA's SPL - First N payload lengths for packets with application data
+//	repeated uint32 packet_inter_arrival_times = 31 [packed=true];	// DEPRECATED - ETTA's SPT - First N inter-arrival times for packets with application data
 	repeated uint32 byte_distribution = 32;			// ETTA's Byte Distribution
 	optional ExtTlsVersion tls_version = 33;			// TLS version parsed from ETTA's IDP
 	optional bytes tls_session_id = 34;				// TLS session parsed from ETTA's IDP
 	optional bytes payload_binary = 35;				// raw payload
 	optional bytes payload_ex_binary = 36;			// raw payload_ex
+	repeated ExtEtaSplt sequence_packet_lengths_times = 37; // ETA's Sequence of Packet Lengths and Times
 }
 
 message ExtFlowExporter {
