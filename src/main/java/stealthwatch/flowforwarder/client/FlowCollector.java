@@ -13,12 +13,9 @@ import org.glassfish.tyrus.client.SslEngineConfigurator;
  */
 class FlowCollector {
     private final String                hostAddress;
-    private       FlowCollectorSession  session;
-    private       SslEngineConfigurator sslEngineConfigurator;
+    private final SslEngineConfigurator sslEngineConfigurator;
 
-    FlowCollector(String hostAddress) {
-        this.hostAddress = hostAddress;
-    }
+    private FlowCollectorSession session;
 
     FlowCollector(String hostAddress, SslEngineConfigurator sslEngineConfigurator) {
         this.hostAddress = hostAddress;

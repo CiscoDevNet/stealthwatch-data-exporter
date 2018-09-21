@@ -44,9 +44,7 @@ class FlowForwarderClient {
         sslEngineConfigurator.setHostVerificationEnabled(!configuration.bypassHostVerification);
 
         configuration.hosts.stream()
-                           .map(host -> host.startsWith("wss")
-                                   ? new FlowCollector(host, sslEngineConfigurator)
-                                   : new FlowCollector(host))
+                           .map(host -> new FlowCollector(host, sslEngineConfigurator))
                            .forEach(flowCollectors::add);
     }
 

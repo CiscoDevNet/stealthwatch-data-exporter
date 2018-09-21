@@ -19,11 +19,13 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import stealthwatch.protobuf.GeneratedMessageFormatter;
 
+import static java.lang.String.format;
+
 /**
  * WebSocket client configuration using javax.websocket (glassfish.tyrus as implementation)
  */
-@ClientEndpoint
-public class MessageHandler {
+@ClientEndpoint(configurator = EndpointConfigurator.class)
+public class Endpoint {
 
     private final GeneratedMessageFormatter formatter = new GeneratedMessageFormatter();
 
@@ -39,12 +41,12 @@ public class MessageHandler {
     }
 
     @OnOpen
-    public void onOpen(Session session) {
+    public static void onOpen(Session session) {
         Loggers.system.info("Socket Opened at  " + new Date() + ' ' + session.getId());
     }
 
     @OnClose
-    public void onClose(Session session, CloseReason reason) {
-        Loggers.system.info("Socket Closed  at  " + new Date() + ' ' + session.getId());
+    public static void onClose(Session session, CloseReason reason) {
+        Loggers.system.info(format("Session %s closed, %s", session.getId(), reason));
     }
 }
