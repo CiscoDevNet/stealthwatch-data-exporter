@@ -41,7 +41,7 @@ class FlowCollectorSession extends Thread {
             if (sslEngineConfigurator != null) {
                 container.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
             }
-            session = container.connectToServer(MessageHandler.class, URI.create(hostAddress));
+            session = container.connectToServer(Endpoint.class, URI.create(hostAddress));
         } catch (IOException | IllegalArgumentException e) {
             Loggers.system.error("Malformed URI: ", e);
         } catch (DeploymentException e) {

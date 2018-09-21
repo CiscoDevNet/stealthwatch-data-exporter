@@ -81,15 +81,21 @@ the secure web socket connection.
 Stealthwatch prior to 7.0
 -------------------------
 
-Import `certs/data-exporter-certificate-authority.crt` into the Flow Collector via the
-`Configuration -> Certificate Authority Certificates` menu.
+Import 
+
+    certs/data-exporter-certificate-authority.crt
+    
+into the Flow Collector via the `Configuration -> Certificate Authority Certificates` menu.
 
 Stealthwatch 7.0 and after
 --------------------------
 
-Import `certs/data-exporter-certificate-authority.crt` and 
-`certs/data-exporter.crt` into the Flow Collector via the
-`Configuration -> Certificate Authority Certificates` menu.
+Import 
+
+    certs/data-exporter-certificate-authority.crt
+    certs/data-exporter.crt 
+
+into the Flow Collector via the Central Management.
 
 Running the application
 -----------------------
