@@ -11,7 +11,7 @@ import static java.util.Collections.singletonList;
 import static org.glassfish.tyrus.client.SslContextConfigurator.KEY_STORE_FILE;
 import static org.glassfish.tyrus.client.SslContextConfigurator.KEY_STORE_PASSWORD;
 
-class EndpointConfigurator extends Configurator {
+public class EndpointConfigurator extends Configurator {
 
     @Override
     public void beforeRequest(Map<String, List<String>> headers) {
