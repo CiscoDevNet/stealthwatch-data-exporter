@@ -24,11 +24,22 @@ public class EndpointConfigurator extends Configurator {
             keystore.load(new FileInputStream(System.getProperty(KEY_STORE_FILE)),
                           System.getProperty(KEY_STORE_PASSWORD).toCharArray());
             String alias = keystore.aliases().nextElement();
-            return String.format("-----BEGIN CERTIFICATE-----\t%s\t-----END CERTIFICATE-----",
-                                 Base64.getEncoder().encodeToString(keystore.getCertificate(alias).getEncoded()));
+            String certificate = Base64.getEncoder().encodeToString(keystore.getCertificate(alias).getEncoded());
+            return toStealthwatchFormat(certificate);
         } catch (Exception e) {
             throw new IllegalStateException(
                     "Error retrieving key store certificate from " + System.getProperty(KEY_STORE_FILE), e);
         }
+    }
+
+    private static String toStealthwatchFormat(String certificate) {
+        StringBuilder stealthwatchCertificate = new StringBuilder();
+        stealthwatchCertificate.append("-----BEGIN CERTIFICATE-----\t");
+        for (int begin = 0; begin < certificate.length(); begin += 64) {
+            int end = begin + 64 > certificate.length() ? certificate.length() : begin + 64;
+            stealthwatchCertificate.append(certificate.substring(begin, end)).append('\t');
+        }
+        stealthwatchCertificate.append("-----END CERTIFICATE-----");
+        return stealthwatchCertificate.toString();
     }
 }
