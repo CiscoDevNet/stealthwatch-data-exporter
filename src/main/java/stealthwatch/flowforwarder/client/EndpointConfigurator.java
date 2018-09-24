@@ -24,7 +24,8 @@ public class EndpointConfigurator extends Configurator {
             keystore.load(new FileInputStream(System.getProperty(KEY_STORE_FILE)),
                           System.getProperty(KEY_STORE_PASSWORD).toCharArray());
             String alias = keystore.aliases().nextElement();
-            return Base64.getEncoder().encodeToString(keystore.getCertificate(alias).getEncoded());
+            return Base64.getEncoder().encodeToString(keystore.getCertificate(alias).getEncoded())
+                         .replace('\n', '\t');
         } catch (Exception e) {
             throw new IllegalStateException(
                     "Error retrieving key store certificate from " + System.getProperty(KEY_STORE_FILE), e);
