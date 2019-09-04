@@ -5,7 +5,9 @@ This project is the Java reference implementation of a Data Exporter Client.
 
 The Flow Forwarder Docker Container on the Flow Collector listens to Flow
 events from the Engine via ZeroMQ. It sends stitched, de-duplicated flow records 
-over a web socket to registered clients.
+over a secure web socket to registered clients.
+
+![Overview](./doc/dex.svg)
 
 The flow records are sent once per minute as a `java.io.ByteBuffer` containing 
 [Google Protocol Buffer](https://developers.google.com/protocol-buffers) representations 

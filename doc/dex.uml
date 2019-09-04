@@ -1,0 +1,21 @@
+# see http://plantuml.com/component-diagram for help
+
+@startuml
+
+node "Flow Collector" as FC {
+    node "Engine" as Engine
+    node "Flow Forwarder" as FF
+    collections "Truststore" as FC_TRUST
+}
+
+node "Data Exporter Host" as DEX_HOST {
+   node "Data Exporter Client" as DEX
+   collections "Truststore" as DEX_TRUST
+}
+
+Engine .> FF: flow stats\nover ZMQ
+FF .> FC_TRUST: authenticates\nclient
+FF ..> DEX: flow stats\nover secure web socket 
+DEX .> DEX_TRUST: authenticates FC
+
+@enduml
