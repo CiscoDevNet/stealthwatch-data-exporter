@@ -55,12 +55,12 @@ message ExtFlowHost {
 	optional string parent_process_hash = 26;		// Hash of Parent Process from endpoint data
 	optional string parent_process_username = 27;   // Parent Process Username from endpoint data
 
-	optional bytes idp = 29;						// ETTA's Initial Data Packet
-//	repeated sint32 packet_lengths = 30 [packed=true];				// DEPRECATED - ETTA's SPL - First N payload lengths for packets with application data
-//	repeated uint32 packet_inter_arrival_times = 31 [packed=true];	// DEPRECATED - ETTA's SPT - First N inter-arrival times for packets with application data
-	repeated uint32 byte_distribution = 32;			// ETTA's Byte Distribution
-	optional ExtTlsVersion tls_version = 33;			// TLS version parsed from ETTA's IDP
-	optional bytes tls_session_id = 34;				// TLS session parsed from ETTA's IDP
+	optional bytes idp = 29;						// ETA's Initial Data Packet
+//	repeated sint32 packet_lengths = 30 [packed=true];				// DEPRECATED - ETA's SPL - First N payload lengths for packets with application data
+//	repeated uint32 packet_inter_arrival_times = 31 [packed=true];	// DEPRECATED - ETA's SPT - First N inter-arrival times for packets with application data
+	repeated uint32 byte_distribution = 32;			// ETA's Byte Distribution
+	optional ExtTlsVersion tls_version = 33;		// TLS version parsed from ETA's IDP
+	optional bytes tls_session_id = 34;				// TLS session parsed from ETA's IDP
 	optional bytes payload_binary = 35;				// raw payload
 	optional bytes payload_ex_binary = 36;			// raw payload_ex
 	repeated ExtEtaSplt sequence_packet_lengths_times = 37; // ETA's Sequence of Packet Lengths and Times
@@ -104,6 +104,11 @@ message ExtFlow {
 	repeated ExtFlowExporter exporters = 25;			// list of exporters
 	optional bytes selected_cipher_suite = 26;		// Cipher suite selected by server and parsed from ETTA's IDP
 	optional int32 netflow_count = 27;				// Number of records within the stitched and de-duped flow
+
+	optional string tls_fingerprint = 31;           // TLS client hello fingerprint signature from Mercury library
+	optional string tls_sni = 32;                   // Server Name Indication (SNI) from TLS client hello
+	optional string eta_client_process_name = 33;   // Process name of TLS client (from Mercury analysis)
+	optional uint32 eta_confidence = 34;            // Confidence in analysis (between 0 and 100 inclusive)
 }
 
 message ExtFlows {
