@@ -6,11 +6,10 @@
 
 package stealthwatch.flowforwarder.client;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 interface Loggers {
-
-    Logger system = Logger.getLogger("system");
-    Logger message = Logger.getLogger("message");
-
+    Logger system  = LogManager.getLogger("system");
+    Logger message = LogManager.getLogger("message");
 }
